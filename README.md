@@ -1,8 +1,12 @@
 # Next.js POC - Full Stack Application
 
-A production-ready Next.js application with PostgreSQL backend, clean architecture, and use case pattern implementation.
+A production-ready Next.js application with PostgreSQL backend, Supabase authentication, clean architecture, and use case pattern implementation.
 
-## 🚀 Quick Start
+## Live Demo
+
+[View Deployed Application](https://your-deployment-url.vercel.app)
+
+## Quick Start
 
 ```bash
 # Install dependencies
@@ -24,18 +28,19 @@ npm run dev
 
 Visit http://localhost:3000
 
-## 📚 Documentation
+## Documentation
 
 ### Setup & Configuration
-- **[DATABASE_SETUP.md](./DATABASE_SETUP.md)** - Local PostgreSQL setup guide
-- **[SETUP_COMPLETE.md](./SETUP_COMPLETE.md)** - What's currently working
+- **[DATABASE_SETUP.md](docs/DATABASE_SETUP.md)** - Local PostgreSQL setup guide
+- **[SETUP_COMPLETE.md](docs/SETUP_COMPLETE.md)** - What's currently working
+- **[SUPABASE_SSO_SETUP.md](SUPABASE_SSO_SETUP.md)** - Supabase authentication setup guide
 
 ### Deployment
-- **[SUPABASE_DEPLOYMENT_PLAN.md](./SUPABASE_DEPLOYMENT_PLAN.md)** - Complete deployment guide (40 min)
-- **[DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)** - Step-by-step checklist
-- **[DEPLOYMENT_ARCHITECTURE.md](./DEPLOYMENT_ARCHITECTURE.md)** - Architecture diagrams & scalability
+- **[SUPABASE_DEPLOYMENT_PLAN.md](docs/SUPABASE_DEPLOYMENT_PLAN.md)** - Complete deployment guide (40 min)
+- **[DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md)** - Step-by-step checklist
+- **[DEPLOYMENT_ARCHITECTURE.md](docs/DEPLOYMENT_ARCHITECTURE.md)** - Architecture diagrams & scalability
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 Frontend (React/Next.js)
@@ -51,7 +56,7 @@ Drizzle ORM
 PostgreSQL Database
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Next.js 16** - React framework with App Router
@@ -67,9 +72,9 @@ PostgreSQL Database
 
 ### Deployment (Planned)
 - **Vercel** - Hosting & CI/CD
-- **Supabase** - Managed PostgreSQL
+- **Supabase** - Managed PostgreSQL & Authentication
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ├── app/
@@ -104,9 +109,9 @@ PostgreSQL Database
 └── tsconfig.json
 ```
 
-## ✨ Features
+## Features
 
-### Current Features ✅
+### Current Features
 - **CRUD Operations** - Create, Read, Update, Delete items
 - **Validation** - Input validation with error messages
   - Name: 3-100 characters
@@ -118,6 +123,9 @@ PostgreSQL Database
 - **Database Persistence** - PostgreSQL with Drizzle ORM
 - **Responsive UI** - Mobile-friendly design
 - **Dark Mode Support** - Automatic theme detection
+- **Authentication** - Email/password and OAuth (Google, GitHub, Azure, GitLab)
+- **Protected Routes** - Middleware-based authentication
+- **Password Reset** - Secure password recovery flow
 
 ### API Endpoints
 
@@ -136,7 +144,7 @@ PostgreSQL Database
 
 Example: `/api/items?sortBy=name&sortOrder=desc`
 
-## 🔧 Available Scripts
+## Available Scripts
 
 ### Development
 ```bash
@@ -154,7 +162,7 @@ npm run db:migrate   # Run migrations
 npm run db:studio    # Open Drizzle Studio (GUI)
 ```
 
-## 🧪 Testing the API
+## Testing the API
 
 ### Create Item
 ```bash
@@ -181,7 +189,7 @@ curl http://localhost:3000/api/items/{uuid}
 curl -X DELETE http://localhost:3000/api/items/{uuid}
 ```
 
-## 🎯 Business Logic
+## Business Logic
 
 ### Validation Rules
 - **Name**:
@@ -198,21 +206,21 @@ curl -X DELETE http://localhost:3000/api/items/{uuid}
 - `422` - Business rule violations
 - `500` - Server errors
 
-## 🚀 Deployment
+## Deployment
 
 Ready to deploy? Follow these guides:
 
-1. **Quick Start**: [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
-2. **Full Guide**: [SUPABASE_DEPLOYMENT_PLAN.md](./SUPABASE_DEPLOYMENT_PLAN.md)
-3. **Architecture**: [DEPLOYMENT_ARCHITECTURE.md](./DEPLOYMENT_ARCHITECTURE.md)
+1. **Quick Start**: [DEPLOYMENT_CHECKLIST.md](docs/DEPLOYMENT_CHECKLIST.md)
+2. **Full Guide**: [SUPABASE_DEPLOYMENT_PLAN.md](docs/SUPABASE_DEPLOYMENT_PLAN.md)
+3. **Architecture**: [DEPLOYMENT_ARCHITECTURE.md](docs/DEPLOYMENT_ARCHITECTURE.md)
 
 **Estimated Time**: 30-40 minutes for first deployment
 
 **Target Stack**:
-- 🔵 Vercel (Frontend & API)
-- 🟢 Supabase (PostgreSQL Database)
+- Vercel (Frontend & API)
+- Supabase (PostgreSQL Database & Authentication)
 
-## 📊 Database Schema
+## Database Schema
 
 ### Items Table
 | Column | Type | Constraints |
@@ -223,19 +231,23 @@ Ready to deploy? Follow these guides:
 | created_at | TIMESTAMP | NOT NULL, DEFAULT now() |
 | updated_at | TIMESTAMP | NOT NULL, DEFAULT now() |
 
-## 🔐 Environment Variables
+## Environment Variables
 
 ### Required
 ```env
 DATABASE_URL=postgresql://user:password@host:port/database
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
 ### For Production (Supabase)
 ```env
 DATABASE_URL=postgresql://postgres:[PASSWORD]@xxx.pooler.supabase.com:6543/postgres?pgbouncer=true
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-production-anon-key
 ```
 
-## 🎨 UI Features
+## UI Features
 
 - Responsive design (mobile-first)
 - Dark mode support
@@ -243,10 +255,11 @@ DATABASE_URL=postgresql://postgres:[PASSWORD]@xxx.pooler.supabase.com:6543/postg
 - Loading states
 - Error messages
 - Success notifications
+- Authentication UI (Login, Signup, Password Reset)
 
-## 📈 Roadmap
+## Roadmap
 
-### Phase 1: MVP ✅ (Complete)
+### Phase 1: MVP (Complete)
 - [x] Basic CRUD operations
 - [x] PostgreSQL integration
 - [x] Use case architecture
@@ -260,10 +273,13 @@ DATABASE_URL=postgresql://postgres:[PASSWORD]@xxx.pooler.supabase.com:6543/postg
 - [ ] Set up CI/CD
 - [ ] Configure custom domain
 
-### Phase 3: Authentication (Planned)
-- [ ] User registration/login
-- [ ] Supabase Auth integration
-- [ ] Protected routes
+### Phase 3: Authentication (Complete)
+- [x] User registration/login
+- [x] Supabase Auth integration
+- [x] Protected routes
+- [x] Email/password authentication
+- [x] OAuth providers (Google, GitHub, Azure, GitLab)
+- [x] Password reset flow
 - [ ] User-specific items
 
 ### Phase 4: Advanced Features (Future)
@@ -274,7 +290,7 @@ DATABASE_URL=postgresql://postgres:[PASSWORD]@xxx.pooler.supabase.com:6543/postg
 - [ ] Real-time updates
 - [ ] Analytics
 
-## 🤝 Contributing
+## Contributing
 
 This is a POC project. To extend it:
 
@@ -285,11 +301,11 @@ This is a POC project. To extend it:
 5. Update repository in `lib/repositories/`
 6. Create/update API routes in `app/api/`
 
-## 📝 License
+## License
 
 MIT
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with [Next.js](https://nextjs.org/)
 - Database ORM: [Drizzle](https://orm.drizzle.team/)
@@ -298,7 +314,7 @@ MIT
 
 ---
 
-**Status**: ✅ Production Ready
+**Status**: Production Ready
 **Version**: 1.0.0
 **Last Updated**: November 2025
 

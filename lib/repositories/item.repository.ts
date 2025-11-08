@@ -12,7 +12,7 @@ export interface ItemRepository {
 
 class ItemRepositoryImpl implements ItemRepository {
   async getAll(): Promise<Item[]> {
-    return await db.select().from(items).orderBy(items.createdAt);
+    return db.select().from(items).orderBy(items.createdAt);
   }
 
   async getById(id: string): Promise<Item | undefined> {
