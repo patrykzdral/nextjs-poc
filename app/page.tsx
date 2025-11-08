@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { createClient } from '@/utils/supabase/client';
+import { User } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
 
 interface Item {
   id: string;
@@ -17,6 +20,9 @@ export default function Home() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+  const supabase = createClient();
 
   // Fetch items from the backend
   const fetchItems = async () => {
@@ -34,7 +40,26 @@ export default function Home() {
 
   useEffect(() => {
     fetchItems();
+
+    // Get the current user
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/login');
+  };
 
   // Create a new item
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,7 +115,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col gap-8 py-16 px-8 bg-white dark:bg-black">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between gap-4">
           <Image
             className="dark:invert"
             src="/next.svg"
@@ -99,6 +124,24 @@ export default function Home() {
             height={20}
             priority
           />
+          {user && (
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <p className="text-sm font-medium text-black dark:text-zinc-50">
+                  {user.email}
+                </p>
+                <p className="text-xs text-zinc-500 dark:text-zinc-500">
+                  {user.user_metadata?.full_name || 'User'}
+                </p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-800"
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </div>
 
         <div>
